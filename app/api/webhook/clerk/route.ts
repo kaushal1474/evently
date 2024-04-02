@@ -22,6 +22,8 @@ export async function POST(req: Request) {
 
     // If there are no headers, error out
     if (!svix_id || !svix_timestamp || !svix_signature) {
+        console.log("+++++++++++++++++++++++++++++++++++++++++++++");
+        
         return new Response('Error occured -- no svix headers', {
             status: 400
         })
@@ -56,7 +58,7 @@ export async function POST(req: Request) {
 
     if (eventType === "user.created") {
 
-        console.log("eventType", evt);
+        console.log("eventTypeeventTypeeventTypeeventTypeeventTypeeventType", evt);
         
         const { id, first_name, last_name, username, email_addresses, image_url } = evt.data;
 

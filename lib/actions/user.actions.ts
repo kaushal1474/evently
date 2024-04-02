@@ -1,4 +1,5 @@
-"use server"
+'use server'
+
 import { revalidatePath } from "next/cache";
 
 import { CreateUserParams, UpdateUserParams } from "@/types";
@@ -12,7 +13,7 @@ async function createUser(userData: CreateUserParams) {
     try {
         await connectToDatabase();
         const newUser = await User.create(userData);
-        console.log("newUser", newUser);
+        console.log("==================================", newUser);
         
         return JSON.parse(JSON.stringify(newUser));
 
