@@ -10,7 +10,7 @@ const Header = () => {
     <header className='border-b w-full'>
       <div className='wrapper flex justify-between items-center'>
         <Link href="/" className='w-36'>
-          <Image src={"/assets/images/logo.svg"} alt="logo"
+          <Image src="/assets/images/logo.svg" alt="logo"
             width={128} height={38}
           />
         </Link>

@@ -12,7 +12,8 @@ async function createUser(userData: CreateUserParams) {
     try {
         await connectToDatabase();
         const newUser = await User.create(userData);
-
+        console.log("newUser", newUser);
+        
         return JSON.parse(JSON.stringify(newUser));
 
     } catch (err) {
