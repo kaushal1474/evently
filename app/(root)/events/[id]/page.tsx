@@ -3,6 +3,7 @@ import { getEventById, getRelatedEventsByCategory } from '@/lib/actions/event.ac
 import { formatDateTime } from '@/lib/utils';
 import { SearchParamProps } from '@/types';
 import Collection from '@/components/shared/Collection';
+import CheckoutButton from '@/components/shared/CheckoutButton';
 
 const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
     const eventData = await getEventById(id);
@@ -41,16 +42,19 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
                             </div>
                         </div>
 
+                        <CheckoutButton event={eventData} />
+
                         <div className='flex flex-col gap-5'>
                             <div className="flex gap-2 md:gap-3">
                                 <Image src="/assets/icons/calendar.svg" alt="calendar"
                                     width={32} height={32}
                                 />
-                                <div className='p-medium-16 lg:p-redular-20 flex flex-wrap items-center'>
+                                <div className='p-medium-16 lg:p-redular-20 flex flex-wrap items-center gap-x-2'>
                                     <p>
                                         {formatDateTime(eventData.startDateTime).dateOnly} - {" "}
                                         {formatDateTime(eventData.startDateTime).timeOnly}
                                     </p>
+                                    <b>to</b>
                                     <p>
                                         {formatDateTime(eventData.endDateTime).dateOnly} - {""}
                                         {formatDateTime(eventData.endDateTime).timeOnly}

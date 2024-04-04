@@ -57,7 +57,7 @@ export const getEventById = async (eventId: string) => {
     }
 }
 
-// GET ALL EVENTS
+// GET ALL EVENTS | TODO: condtion
 export async function getAllEvents({ query, limit = 6, page, category }: GetAllEventsParams) {
     try {
         await connectToDatabase()
