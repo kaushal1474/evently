@@ -1,12 +1,10 @@
 import EventForm from '@/components/shared/EventForm'
 import { auth } from '@clerk/nextjs';
-import React from 'react'
 
 const CreateEvent = () => {
     const { sessionClaims } = auth();
 
     const userId = sessionClaims?.userId as string;
-    console.log(sessionClaims);
     
     return (
         <>

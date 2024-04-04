@@ -1,8 +1,19 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import Collection from "@/components/shared/Collection";
+import { getAllEvents } from "@/lib/actions/event.action";
 
-export default function Home() {
+export default async function Home() {
+
+  const eventsData = await getAllEvents({
+    category: "",
+    query: "",
+    limit: 6,
+    page: 0
+  })
+  
+
   return (
     <main>
       <section className="bg-primary-50 py-5 md:py-10 bg-dotted-pattern bg-contain">
@@ -36,6 +47,16 @@ export default function Home() {
           Search
           Category
         </div>
+
+        <Collection
+          data={eventsData?.data}
+          emptyTitle={"No events found"}
+          emptyStateSubText="Come back later"
+          collectionType="All_Events"
+          limit={6}
+          page={1}
+          totalPages={2}
+        />
       </section>
     </main>
   );

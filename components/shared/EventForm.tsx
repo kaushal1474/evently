@@ -18,24 +18,33 @@ import { Checkbox } from "@/components/ui/checkbox"
 import Dropdown from "@/components/shared/Dropdown"
 import FileUploader from "@/components/shared/FileUploader"
 import { useUploadThing } from "@/lib/uploadthing"
-import { createEvent } from "@/lib/actions/event.action"
+import { createEvent, updateEvent } from "@/lib/actions/event.action"
 
 import "react-datepicker/dist/react-datepicker.css";
+import { IEvent } from "@/lib/database/models/event.model"
 
 
 interface IEventForm {
     userId: string;
     type: "create" | "update";
+    event?: IEvent
 }
 
-const EventForm = ({ userId, type }: IEventForm) => {
+const EventForm = ({ userId, type, event }: IEventForm) => {
     const [files, setFiles] = useState<File[]>([]);
     const { startUpload } = useUploadThing("imageUploader");
     const router = useRouter();
 
     const form = useForm<z.infer<typeof eventFormSchema>>({
         resolver: zodResolver(eventFormSchema),
-        defaultValues: eventDefaultValues,
+        defaultValues: type === "update" && event ?
+            {
+                ...event,
+                startDateTime: new Date(event.startDateTime),
+                endDateTime: new Date(event.endDateTime),
+                categoryId: event.category._id
+            }
+            : eventDefaultValues,
     })
 
 
@@ -43,17 +52,15 @@ const EventForm = ({ userId, type }: IEventForm) => {
 
 
         let uploadImageUrl = values.imageUrl
-        // if (files.length > 0) {
-        //     const uploadImages = await startUpload(files);
+        if (files.length > 0) {
+            const uploadImages = await startUpload(files);
 
-        //     if (!uploadImages) {
-        //         return
-        //     }
-        //     uploadImageUrl = uploadImages[0].url
-        // }
-        uploadImageUrl = "https://utfs.io/f/e42b1c23-3e97-4a4d-9d31-46faa4f99dd3-9n6t5x.jpg"
-        console.log("==============", userId);
-        
+            if (!uploadImages) {
+                return
+            }
+            uploadImageUrl = uploadImages[0].url
+        }
+
         if (type === "create") {
             try {
                 const newEvent = await createEvent({
@@ -65,6 +72,27 @@ const EventForm = ({ userId, type }: IEventForm) => {
                 if (newEvent) {
                     form.reset();
                     router.push(`/events/${newEvent._id}`)
+                }
+
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        if (type === "update") {
+            if (!event?._id) {
+                router.back();
+                return
+            }
+            try {
+                const updatedEvent = await updateEvent({
+                    event: { ...values, imageUrl: uploadImageUrl, _id: event._id },
+                    userId: userId,
+                    path: `/events/${event._id}`
+                })
+
+                if (updatedEvent) {
+                    form.reset();
+                    router.push(`/events/${updatedEvent._id}`)
                 }
 
             } catch (e) {
