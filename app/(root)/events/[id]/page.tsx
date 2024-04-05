@@ -6,7 +6,8 @@ import Collection from '@/components/shared/Collection';
 import CheckoutButton from '@/components/shared/CheckoutButton';
 
 const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
-    const eventData = await getEventById(id);
+    const eventData = await getEventById(id)
+    const page = Number(searchParams?.page) || 1;
 
     const relatedEvents = await getRelatedEventsByCategory({
         categoryId: eventData.category._id,
@@ -96,9 +97,9 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
                     emptyTitle={"No events found"}
                     emptyStateSubText="Come back later"
                     collectionType="All_Events"
-                    limit={6}
-                    page={1}
-                    totalPages={2}
+                    limit={3}
+                    page={page}
+                    totalPages={relatedEvents?.totalPages}
                 />
             </section>
         </>

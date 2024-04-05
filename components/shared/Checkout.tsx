@@ -3,7 +3,6 @@ import { loadStripe } from '@stripe/stripe-js';
 
 import { Button } from '../ui/button'
 import { IEvent } from '@/lib/database/models/event.model'
-import { checkoutOrder } from '@/lib/actions/order.actions';
 import { redirect } from 'next/navigation';
 
 loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);

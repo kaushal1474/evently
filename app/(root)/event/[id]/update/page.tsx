@@ -1,14 +1,18 @@
 import EventForm from '@/components/shared/EventForm'
 import { getEventById } from '@/lib/actions/event.action';
-import { SearchParamProps, UpdateEventParams } from '@/types';
+import { SearchParamProps } from '@/types';
 import { auth } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
 const UpdateEvent = async({ params: { id }, }: SearchParamProps) => {
     const { sessionClaims } = auth();
     const eventData = await getEventById(id);
-
+    
     const userId = sessionClaims?.userId as string;
-
+    if (eventData.organizer._id !== userId.toString()) {
+        return redirect("/")
+    }
+    
     return (
         <>
             <section className='bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10'>

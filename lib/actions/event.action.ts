@@ -7,6 +7,7 @@ import { handleError } from "../utils";
 import User from "../database/models/user.model";
 import Category from "../database/models/category.model";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const getCategoryByName = async (name: string) => {
     return Category.findOne({ name: { $regex: name, $options: 'i' } })
@@ -46,14 +47,14 @@ export const getEventById = async (eventId: string) => {
         const event = await populateEvent(Event.findById(eventId));
 
         if (!event) {
-            throw new Error("Event not found");
+            redirect("/");
         }
 
         return JSON.parse(JSON.stringify(event));
 
 
     } catch (err) {
-        handleError(err)
+        redirect("/");
     }
 }
 
@@ -65,10 +66,10 @@ export async function getAllEvents({ query, limit = 6, page, category }: GetAllE
         const titleCondition = query ? { title: { $regex: query, $options: 'i' } } : {}
         const categoryCondition = category ? await getCategoryByName(category) : null
         const conditions = {
-            // $and: [titleCondition, categoryCondition ? { category: categoryCondition._id } : {}],
+            $and: [titleCondition, categoryCondition ? { category: categoryCondition._id } : {}],
         }
 
-        const skipAmount = 0; // (Number(page) - 1) * limit
+        const skipAmount = (Number(page) - 1) * limit;
         const eventsQuery = Event.find(conditions)
             .sort({ createdAt: 'desc' })
             .skip(skipAmount)

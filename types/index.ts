@@ -123,6 +123,7 @@ export type CreateOrderParams = {
 export type GetOrdersByEventParams = {
     eventId: string
     searchString: string
+    userId: string
 }
 
 export type GetOrdersByUserParams = {
